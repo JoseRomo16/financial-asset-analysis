@@ -1,0 +1,28 @@
+# Entornos virtuales
+venv/
+.env/
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datos generados (versionar solo el código)
+data/raw/*.csv
+data/processed/*.csv
+
+# Figuras generadas
+reports/figures/*.png
+reports/figures/*.html
+
+# Sistema operativo
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/

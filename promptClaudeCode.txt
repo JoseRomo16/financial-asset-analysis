@@ -1,0 +1,147 @@
+You are helping me build a financial asset analysis project in Python.
+
+## Project context
+This is Project 1 of 8 in a data science portfolio focused on financial analysis.
+The developer has a background in Economics  + Software Development  + Data Science
+
+## Task
+Create the complete project from scratch in the current working directory with the following exact structure:
+
+financial-asset-analysis/
+├── data/
+│   ├── raw/
+│   └── processed/
+├── notebooks/
+│   ├── 01_descarga_datos.ipynb
+│   ├── 02_analisis_retornos.ipynb
+│   ├── 03_riesgo_volatilidad.ipynb
+│   └── 04_visualizaciones.ipynb
+├── src/
+│   ├── __init__.py
+│   ├── data_loader.py
+│   ├── metrics.py
+│   └── visualizer.py
+├── reports/
+│   └── figures/
+├── tests/
+│   └── test_metrics.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+
+## Modules to implement
+
+### src/data_loader.py
+- Function `descargar_precios(tickers, inicio, fin, guardar)` using yfinance
+- Function `cargar_precios_local(ruta)` to load CSV
+- Function `resumen_datos(df)` returning a summary DataFrame
+- Default tickers: ["AAPL", "MSFT", "SPY", "GLD", "BTC-USD", "USD-COP", "EUR/USD", "COLCAP", COFFE]
+- Save raw data to data/raw/, processed to data/processed/
+- Handle NaN with forward fill
+- Use pathlib.Path for all file paths
+
+### src/metrics.py
+Implement all these functions with full docstrings:
+- `calcular_retornos(df, metodo)` → arithmetic or logarithmic daily returns
+- `calcular_retorno_acumulado(retornos)` → cumulative product
+- `calcular_retorno_total(retornos)` → total period return per asset
+- `calcular_retorno_anualizado(retornos)` → geometric annualized return (252 trading days)
+- `calcular_volatilidad(retornos, ventana, anualizar)` → rolling volatility
+- `calcular_volatilidad_total(retornos)` → full-period annualized volatility
+- `calcular_drawdown(retornos)` → drawdown from rolling maximum
+- `calcular_max_drawdown(retornos)` → maximum drawdown per asset
+- `calcular_sharpe(retornos, tasa_libre_riesgo=0.05)` → annualized Sharpe ratio
+- `calcular_var(retornos, confianza=0.95)` → historical VaR (positive = loss)
+- `resumen_metricas(retornos, tasa_libre_riesgo)` → full summary DataFrame
+
+### src/visualizer.py
+Implement these functions, saving outputs to reports/figures/:
+Static (matplotlib + seaborn):
+- `graficar_precios(df, guardar)` → normalized prices base 100
+- `graficar_retorno_acumulado(ret_acum, guardar)` → cumulative returns %
+- `graficar_drawdown(drawdown, guardar)` → filled drawdown chart
+- `graficar_correlacion(retornos, guardar)` → lower-triangle heatmap
+- `graficar_distribucion_retornos(retornos, guardar)` → histogram + KDE per asset
+
+Interactive (plotly):
+- `graficar_retorno_interactivo(ret_acum, guardar)` → with range selector buttons (6M, 1A, 3A, Todo) and rangeslider, save as HTML
+- `graficar_volatilidad_interactiva(vol, guardar)` → rolling volatility, save as HTML
+
+Color palette: ["#2563EB", "#16A34A", "#DC2626", "#D97706", "#7C3AED"]
+
+### notebooks/
+Each notebook must:
+- Add `sys.path.append('..')` at the top to import src/
+- Import only from src/ modules (no inline logic)
+- Have markdown cells explaining each step in Spanish
+- Have a final "Conclusiones" markdown cell with blank fields to fill after running
+- Use `pd.set_option('display.float_format', '{:.4f}'.format)`
+
+Notebook content:
+- 01_descarga_datos.ipynb: download → check nulls → forward fill → save processed CSV → quick price plot
+- 02_analisis_retornos.ipynb: load processed → normalized prices → daily returns → cumulative returns (static + interactive) → distribution → correlation heatmap → metrics summary table
+- 03_riesgo_volatilidad.ipynb: rolling volatility → drawdown chart → max drawdown table → Sharpe ratio → VaR 95% → interactive volatility chart
+- 04_visualizaciones.ipynb: dashboard-style layout combining all key charts → export all figures → final metrics summary
+
+### tests/test_metrics.py
+Write pytest unit tests covering:
+- Shape validation (returns has one fewer row than prices)
+- Correct first arithmetic return value
+- Positive total return for rising asset
+- Negative total return for falling asset
+- Volatility always positive
+- Drawdown always <= 0
+- Max drawdown always <= 0
+- VaR always positive (represents loss)
+- Log returns differ from arithmetic returns
+- ValueError raised for invalid method name
+- Sharpe ratio is finite for valid input
+
+Use a pytest fixture with 5 controlled price points for assets "A" (rising: 100→120) and "B" (falling: 200→180).
+
+### requirements.txt
+yfinance==0.2.38
+pandas==2.2.1
+numpy==1.26.4
+matplotlib==3.8.3
+seaborn==0.13.2
+plotly==5.20.0
+scipy==1.12.0
+jupyter==1.0.0
+ipykernel==6.29.3
+kaleido==0.2.1
+pytest==8.1.1
+
+### .gitignore
+Ignore: venv/, .env/, __pycache__/, *.pyc, .ipynb_checkpoints/, data/raw/*.csv, data/processed/*.csv, reports/figures/*.png, reports/figures/*.html, .DS_Store, .vscode/, .idea/
+
+### README.md
+Write in Spanish with:
+- Badges for Python, pandas, yfinance, License (MIT)
+- Project description (1 paragraph)
+- Objectives (bullet list)
+- Exact folder structure (code block)
+- Assets table with ticker, name, type columns for: AAPL, MSFT, SPY, GLD, BTC-USD
+- Installation instructions (git clone → venv → pip install)
+- Quick usage code example using src/ imports
+- Metrics table explaining: retorno diario, retorno acumulado, volatilidad anualizada, drawdown máximo, ratio de Sharpe, VaR 95%
+- "Aprendizajes clave" section
+- "Próximos pasos" checklist
+- Author section: Jose Luis Romo Melo — Economista | Data Scientist en formación
+- Footer: "Proyecto 1 de 8 — Portafolio de Data Science Financiero"
+
+## Implementation rules
+- All docstrings in Spanish
+- All comments in Spanish
+- Use type hints on all function signatures
+- Use pathlib.Path for all file paths (never os.path)
+- No hardcoded absolute paths — always relative to __file__
+- All functions must handle the case where the input DataFrame has a single ticker (yfinance returns different structure)
+- After creating all files, run: pytest tests/test_metrics.py -v and show the output
+- After tests pass, show the complete folder tree with file sizes
+
+## Final verification
+After creating everything, confirm:
+1. All imports in __init__.py match implemented functions
+2. Notebooks can import from src/ without errors (check with `python -c "from src.metrics import resumen_metricas; print('OK')"`)
+3. pytest passes all 11 tests
