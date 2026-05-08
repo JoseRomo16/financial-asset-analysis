@@ -26,3 +26,6 @@ reports/figures/*.html
 # IDEs
 .vscode/
 .idea/
+
+# Claude
+.claude/
